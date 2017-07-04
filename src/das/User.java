@@ -1,14 +1,13 @@
-package model;
+package das;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "users")
 public class User {
 
 	public static final String NAME_FIELD_NAME = "name";
 	
-	@DatabaseField(generatedId = true)
+	@DatabaseField(generatedId = true, columnName = "user_id")
 	private int functionalRegistration;
 
 	@DatabaseField(columnName = NAME_FIELD_NAME, canBeNull = false)

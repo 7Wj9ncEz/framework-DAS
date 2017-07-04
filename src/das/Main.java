@@ -68,15 +68,15 @@ public class Main{
 		daoP.create(p2);
 		
 		Solicitation s = new Solicitation();
-		s.MakeSolicitation(user1, daoR, daoS, daoP);
+		s.MakeSolicitation(user1, daoR, daoP);
 		daoS.create(s);
 				
 		Solicitation s2 = new Solicitation();;
-		s2.MakeSolicitation(user2, daoR, daoS, daoP);
+		s2.MakeSolicitation(user2, daoR, daoP);
 		daoS.create(s2);
 		
 		s.returnResource();
 		
-		s2.MakeSolicitation(user2, daoR, daoS, daoP);		
+		s2.MakeSolicitation(user2, daoR, daoP);		
 	}
 }

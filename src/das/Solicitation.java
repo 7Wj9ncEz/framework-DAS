@@ -24,8 +24,6 @@ public class Solicitation extends Utility{
 	@DatabaseField(foreign = true, columnName = "resource", foreignAutoCreate = true)
 	public Resource resource;
 	
-	public Dao<Solicitation, Long> daoSolicitation;
-	
 	public boolean isBorrowed(Resource wanted) throws SQLException{
 		System.out.println(this.getDaoSolicitation());
 		List<Solicitation> resources = this.getDaoSolicitation().queryForEq("resource", wanted);
@@ -35,9 +33,8 @@ public class Solicitation extends Utility{
 		return true;
 	}
 	
-	public void MakeSolicitation(User user, Dao<?,Long> dao, Dao<Solicitation, Long> daoS, Dao<Permission, Long> daoP) throws SQLException{
+	public void MakeSolicitation(User user, Dao<?,Long> dao, Dao<Permission, Long> daoP) throws SQLException{
 		Boolean disponible = false, permission=false;
-		this.setDaoSolicitation(daoS);
 		List<?> resources = dao.queryForAll();
 		for(Object resource : resources){
 			Permission p = new Permission();
@@ -106,12 +103,7 @@ public class Solicitation extends Utility{
 		this.resource = resource;
 	}
 
-	public Dao<Solicitation, Long> getDaoSolicitation() {
-		return daoSolicitation;
+	public Dao<Solicitation, Long> getDaoSolicitation() throws SQLException {
+		return SolicitationDaoSingleton.getDao();
 	}
-
-	public void setDaoSolicitation(Dao<Solicitation, Long> daoSolicitation) {
-		this.daoSolicitation = daoSolicitation;
-	}
-	
 }

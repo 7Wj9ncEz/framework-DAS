@@ -15,7 +15,7 @@ public class Main{
 	public static void main(String[] args) throws ClassNotFoundException, SQLException{
 	
 		
-		ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:h2:mem:UserTest");
+		ConnectionSource connectionSource = ConnectionSourceSingleton.getConnectionSource();
 		
 		TableUtils.createTable(connectionSource, User1.class);
 		Dao<User1, Long> dao = DaoManager.createDao(connectionSource, User1.class);

@@ -52,18 +52,31 @@ public class Main{
 		TableUtils.createTable(connectionSource, Solicitation.class);
 		Dao<Solicitation, Long> daoS = DaoManager.createDao(connectionSource, Solicitation.class);
 		
+		TableUtils.createTable(connectionSource, Permission.class);
+		Dao<Permission, Long> daoP = DaoManager.createDao(connectionSource, Permission.class);
+		
+		Permission p = new Permission();
+		p.setUserType("User1");
+		p.setResourceType("Resource1");
+		
+		daoP.create(p);
+		
+		Permission p2 = new Permission();
+		p2.setUserType("User2");
+		p2.setResourceType("Resource1");
+		
+		daoP.create(p2);
+		
 		Solicitation s = new Solicitation();
-		s.MakeSolicitation(user1, daoR, daoS);
-		s.setDaoSolicitation(daoS);
+		s.MakeSolicitation(user1, daoR, daoS, daoP);
 		daoS.create(s);
 				
 		Solicitation s2 = new Solicitation();;
-		s2.MakeSolicitation(user2, daoR, daoS);
-		s2.setDaoSolicitation(daoS);
+		s2.MakeSolicitation(user2, daoR, daoS, daoP);
 		daoS.create(s2);
 		
 		s.returnResource();
 		
-		s2.MakeSolicitation(user2, daoR, daoS);		
+		s2.MakeSolicitation(user2, daoR, daoS, daoP);		
 	}
 }

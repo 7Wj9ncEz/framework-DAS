@@ -11,6 +11,9 @@ public class Resource {
 	
 	@DatabaseField(columnName = "resource_description")
 	private String description;
+	
+	@DatabaseField(columnName = "resource_borrowed", defaultValue="false")
+	private Boolean borrowed;
  
 	public String getName() {
 		return name;
@@ -34,5 +37,13 @@ public class Resource {
 	
 	public void setPatrimonyId(Long patrimonyId) {
 		this.patrimonyId = patrimonyId;
+	}
+
+	public Boolean getBorrowed() {
+		return borrowed;
+	}
+
+	public void setBorrowed(Boolean borrowed) {
+		this.borrowed = borrowed;
 	}
 }

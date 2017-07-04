@@ -11,14 +11,9 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-public class Main {
+public class Main{
 	public static void main(String[] args) throws ClassNotFoundException, SQLException{
-		Reflections reflections = new Reflections("das");
-		Set<Class<? extends User>> allClasses = reflections.getSubTypesOf(User.class);
-		System.out.println(allClasses.size());
-		for(Object obj : allClasses){
-			System.out.println(obj);
-		}
+	
 		
 		ConnectionSource connectionSource = new JdbcConnectionSource("jdbc:h2:mem:UserTest");
 		
@@ -55,11 +50,19 @@ public class Main {
 		
 		daoR.create(projetor1);
 		
-		Solicitation s = new Solicitation();
-		s.MakeSolicitation(user1, projetor1);
-		s.MakeSolicitation(user2, projetor1);
-		s.returnResource(user1, projetor1);
-		s.MakeSolicitation(user2, projetor1);
+		TableUtils.createTable(connectionSource, Solicitation.class);
+		Dao<Solicitation, Long> daoS = DaoManager.createDao(connectionSource, Solicitation.class);
 		
+		Solicitation s = new Solicitation();
+		s.MakeSolicitation(user1, daoR);
+		daoS.create(s);
+				
+		Solicitation s2 = new Solicitation();;
+		s2.MakeSolicitation(user2, daoR);
+		daoS.create(s2);
+		
+		s.returnResource();
+		
+		s2.MakeSolicitation(user2, daoR);		
 	}
 }

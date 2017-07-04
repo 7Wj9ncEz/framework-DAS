@@ -25,21 +25,27 @@ public class Solicitation{
 	public Resource resource;
 	
 	public Dao<Solicitation, Long> daoSolicitation;
-
 	
-	public void MakeSolicitation(User user, Dao<?,Long> dao) throws SQLException{
-		Boolean disponible = false, borrow=false;
-		Map <String, Object> resp = new HashMap< String,Object>();
-		resp.put("resource_borrowed", false);
-		List<?> resources = dao.queryForFieldValues(resp);
+	public Boolean isBorrowed(Resource wanted) throws SQLException{
+		System.out.println(this.getDaoSolicitation());
+		List<Solicitation> resources = this.getDaoSolicitation().queryForEq("resource", wanted);
+		if(resources.isEmpty()){
+			return false;
+		}
+		return true;
+	}
+	
+	public void MakeSolicitation(User user, Dao<?,Long> dao, Dao<Solicitation, Long> daoS) throws SQLException{
+		Boolean disponible = false;
+		this.setDaoSolicitation(daoS);
+		List<?> resources = dao.queryForAll();
 		for(Object resource : resources){
 			Resource resourc = (Resource) resource;
-			if(resourc.getBorrowed() == false){
+			if(!isBorrowed(resourc)){
 				disponible = true;
 				Borrow(user, resourc);
 			}
 		}
-		System.out.println(user.getName() + " " + disponible);
 		if(!disponible){
 			if(resources.size() != 0){
 				System.out.println("Todos os " + ResourceType((Resource)resources.get(0)) + " estao emprestados" );
@@ -51,12 +57,9 @@ public class Solicitation{
 	}
 	
 	public void Borrow(User user, Resource resource) throws SQLException{
-		if(resource.getBorrowed() == false){
-			System.out.println("Emprestando para " +  user.getName() + " do tipo " + UserType(user));
-			this.setUser(user);
-			this.setResource(resource);
-			this.getResource().setBorrowed(true);
-		}
+		System.out.println("Emprestando para " +  user.getName() + " do tipo " + UserType(user));
+		this.setUser(user);
+		this.setResource(resource);
 	}
 	
 	public String UserType(User user){
@@ -89,9 +92,8 @@ public class Solicitation{
 		if(user == null || resource == null){
 			System.out.println("Essa solicitacao esta vazia");
 		}
-		else if(resource.getBorrowed()){
+		else if(isBorrowed(resource)){
 			System.out.println("Recurso " + resource.getName() + " devolvido, obrigado(a)" + user.getName() + "!");
-			resource.setBorrowed(false);
 			this.getDaoSolicitation().delete(this);
 		}else{
 			System.out.println("Esse item não foi emprestado");

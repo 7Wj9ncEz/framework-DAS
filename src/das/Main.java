@@ -45,7 +45,6 @@ public class Main{
 		projetor1.setPatrimonyId((long) 1);
 		projetor1.setResolucao("700x400");
 		projetor1.setName("Projetor1");
-		projetor1.setBorrowed(false);
 		projetor1.setDescription("e preto");
 		
 		daoR.create(projetor1);
@@ -54,15 +53,17 @@ public class Main{
 		Dao<Solicitation, Long> daoS = DaoManager.createDao(connectionSource, Solicitation.class);
 		
 		Solicitation s = new Solicitation();
-		s.MakeSolicitation(user1, daoR);
+		s.MakeSolicitation(user1, daoR, daoS);
+		s.setDaoSolicitation(daoS);
 		daoS.create(s);
 				
 		Solicitation s2 = new Solicitation();;
-		s2.MakeSolicitation(user2, daoR);
+		s2.MakeSolicitation(user2, daoR, daoS);
+		s2.setDaoSolicitation(daoS);
 		daoS.create(s2);
 		
 		s.returnResource();
 		
-		s2.MakeSolicitation(user2, daoR);		
+		s2.MakeSolicitation(user2, daoR, daoS);		
 	}
 }

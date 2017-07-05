@@ -2,7 +2,7 @@ package das;
 
 import com.j256.ormlite.field.DatabaseField;
 
-public class User {
+public class UserBase {
 
 	public static final String USER_ID = "user_id";
 	public static final String USER_NAME = "user_name";
@@ -13,17 +13,17 @@ public class User {
 	@DatabaseField(columnName = USER_NAME, canBeNull = false)
 	private String name;
 
-	public User(int functionalRegistration, String name) {
+	public UserBase(int functionalRegistration, String name) {
 		super();
 		this.functionalRegistration = functionalRegistration;
 		this.name = name;
 	}
 
-	public User(String name) {
+	public UserBase(String name) {
 		this.name = name;
 	}
 	
-	public User() {
+	public UserBase() {
 	}
 	
 	public int getFunctionalRegistration() {

@@ -6,10 +6,10 @@ import org.reflections.Reflections;
 
 public class Utility {
 
-	public String UserType(User user){
+	public String UserType(UserBase user){
 		String user_type = "";
 		Reflections reflections = new Reflections("das");
-		Set<Class<? extends User>> allClasses = reflections.getSubTypesOf(User.class);
+		Set<Class<? extends UserBase>> allClasses = reflections.getSubTypesOf(UserBase.class);
 		for(Class<?> child : allClasses){
 			if(child.isInstance(user)){
 				user_type = child.getSimpleName();
@@ -18,10 +18,10 @@ public class Utility {
 		return user_type;
 	}
 	
-	public String ResourceType(Resource resource){
+	public String ResourceType(ResourceBase resource){
 		String resource_type = "";
 		Reflections reflections = new Reflections("das");
-		Set<Class<? extends Resource>> allClasses = reflections.getSubTypesOf(Resource.class);
+		Set<Class<? extends ResourceBase>> allClasses = reflections.getSubTypesOf(ResourceBase.class);
 		for(Class<?> child : allClasses){
 			if(child.isInstance(resource)){
 				resource_type = child.getSimpleName();

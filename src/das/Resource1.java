@@ -3,7 +3,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "resources_1")
-public class Resource1 extends Resource{
+public class Resource1 extends ResourceBase{
 	@DatabaseField(columnName = "resolucao", canBeNull = false)
 	public String resolucao;
 

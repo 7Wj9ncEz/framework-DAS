@@ -21,12 +21,12 @@ public class Solicitation extends Utility{
 	private int solicitationId;
 	
 	@DatabaseField(foreign = true, columnName = USER, foreignAutoCreate = true)
-	public User user;
+	public UserBase user;
 	
 	@DatabaseField(foreign = true, columnName = RESOURCE, foreignAutoCreate = true)
-	public Resource resource;
+	public ResourceBase resource;
 	
-	public boolean isBorrowed(Resource wanted) throws SQLException{
+	public boolean isBorrowed(ResourceBase wanted) throws SQLException{
 		System.out.println(this.getDaoSolicitation());
 		List<Solicitation> resources = this.getDaoSolicitation().queryForEq(RESOURCE, wanted);
 		if(resources.isEmpty()){
@@ -35,7 +35,7 @@ public class Solicitation extends Utility{
 		return true;
 	}
 	
-	public <T> void MakeSolicitation(User user, Class<T> resourceClass) throws SQLException{
+	public <T> void MakeSolicitation(UserBase user, Class<T> resourceClass) throws SQLException{
 		Boolean isAvailable = false, hasPermission = false;
 		List<?> resourcesList = ResourceDaoMultiton.getDao(resourceClass).queryForAll();
 
@@ -46,7 +46,7 @@ public class Solicitation extends Utility{
 
 		for(Object resource : resourcesList){
 			Permission permission = new Permission();
-			Resource currentResource = (Resource) resource;
+			ResourceBase currentResource = (ResourceBase) resource;
 
 			if(permission.hasPermission(user, currentResource) || numberOfPermissions == 0){
 				hasPermission = true;
@@ -59,9 +59,9 @@ public class Solicitation extends Utility{
 
 		if(!isAvailable){
 			if(!hasPermission){
-				System.out.println("Oi, " + user.getName()+ "! Infelizmente, você não possui permissão para pegar o recurso do tipo " + ResourceType((Resource)resourcesList.get(0)) + " emprestado");
+				System.out.println("Oi, " + user.getName()+ "! Infelizmente, você não possui permissão para pegar o recurso do tipo " + ResourceType((ResourceBase)resourcesList.get(0)) + " emprestado");
 			}else if(resourcesList.size() != 0){
-				System.out.println("Todos os " + ResourceType((Resource)resourcesList.get(0)) + " estao emprestados" );
+				System.out.println("Todos os " + ResourceType((ResourceBase)resourcesList.get(0)) + " estao emprestados" );
 			}else{
 				System.out.println("Não existem recursos deste tipo cadastrados" );
 			}
@@ -69,15 +69,15 @@ public class Solicitation extends Utility{
 		}
 	}
 	
-	public void borrow(User user, Resource resource) throws SQLException{
+	public void borrow(UserBase user, ResourceBase resource) throws SQLException{
 		System.out.println("Emprestando para " +  user.getName() + " do tipo " + UserType(user));
 		this.setUser(user);
 		this.setResource(resource);
 	}
 	
 	public void returnResource() throws SQLException{
-		Resource resource =  this.getResource();
-		User user = this.getUser();
+		ResourceBase resource =  this.getResource();
+		UserBase user = this.getUser();
 		if(user == null || resource == null){
 			System.out.println("Essa solicitacao esta vazia");
 		}
@@ -97,19 +97,19 @@ public class Solicitation extends Utility{
 		this.solicitationId = solicitationId;
 	}
 
-	public User getUser() {
+	public UserBase getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(UserBase user) {
 		this.user = user;
 	}
 
-	public Resource getResource() {
+	public ResourceBase getResource() {
 		return resource;
 	}
 
-	public void setResource(Resource resource) {
+	public void setResource(ResourceBase resource) {
 		this.resource = resource;
 	}
 

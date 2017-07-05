@@ -4,7 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "users_2")
-public class User2 extends User{
+public class User2 extends UserBase {
 	
 	@DatabaseField(columnName = "last_name", canBeNull = false)
 	public String lastName;

@@ -2,7 +2,7 @@ package das;
 
 import com.j256.ormlite.field.DatabaseField;
 
-public class Resource {
+public class ResourceBase {
 
 	public static final String RESOURCE_ID = "resource_id";
 	public static final String RESOURCE_NAME = "resource_name";

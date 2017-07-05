@@ -1,11 +1,15 @@
 package das;
 
+import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "users_1")
 public class User1 extends User{
 	
+	@DatabaseField(columnName = "endereco", canBeNull = false)
 	public String endereco;
+	
+	@DatabaseField(columnName = "idade", canBeNull = false)
 	public Integer idade;
 	public String getEndereco() {
 		return endereco;

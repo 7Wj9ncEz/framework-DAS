@@ -28,7 +28,7 @@ public class Permission extends Utility{
 	@DatabaseField(columnName = RESOURCE_TYPE, canBeNull = false)
 	public String resourceType;
 	
-	public boolean havePermission(User user, Resource resource) throws SQLException{
+	public boolean hasPermission(User user, Resource resource) throws SQLException{
 		Map<String, Object> p = new HashMap<String, Object>();
 		p.put(USER_TYPE, UserType(user));
 		p.put(RESOURCE_TYPE, ResourceType(resource));

@@ -41,24 +41,32 @@ public class Solicitation extends Utility{
 	}
 	
 	public <T> void MakeSolicitation(User user, Class<T> resourceClass) throws SQLException{
-		Boolean disponible = false, permission=false;
-		List<?> resources = ResourceDaoMultiton.getDao(resourceClass).queryForAll();
-		for(Object resource : resources){
-			Permission p = new Permission();
-			Resource resourc = (Resource) resource;
-			if(p.havePermission(user, resourc)){
-				permission = true;
+		Boolean isAvailable = false, hasPermission = false;
+		List<?> resourcesList = ResourceDaoMultiton.getDao(resourceClass).queryForAll();
+
+		List<?> allPermissionsList = PermissionDaoSingleton.getDao().queryForAll();
+
+		int numberOfPermissions = allPermissionsList.size();
+		System.out.println("Quantidade de permissões criadas: " + numberOfPermissions);
+
+		for(Object resource : resourcesList){
+			Permission permission = new Permission();
+			Resource currentResource = (Resource) resource;
+
+			if(permission.hasPermission(user, currentResource) || numberOfPermissions == 0){
+				hasPermission = true;
 			}
-			if(!isBorrowed(resourc) && permission){
-				disponible = true;
-				Borrow(user, resourc);
+			if(!isBorrowed(currentResource) && hasPermission){
+				isAvailable = true;
+				borrow(user, currentResource);
 			}
 		}
-		if(!disponible){
-			if(!permission){
-				System.out.println("Oi, " + user.getName()+ "! Infelizmente, você não possui permissão para pegar o recurso do tipo " + ResourceType((Resource)resources.get(0)) + " emprestado");
-			}else if(resources.size() != 0){
-				System.out.println("Todos os " + ResourceType((Resource)resources.get(0)) + " estao emprestados" );
+
+		if(!isAvailable){
+			if(!hasPermission){
+				System.out.println("Oi, " + user.getName()+ "! Infelizmente, você não possui permissão para pegar o recurso do tipo " + ResourceType((Resource)resourcesList.get(0)) + " emprestado");
+			}else if(resourcesList.size() != 0){
+				System.out.println("Todos os " + ResourceType((Resource)resourcesList.get(0)) + " estao emprestados" );
 			}else{
 				System.out.println("Não existem recursos deste tipo cadastrados" );
 			}
@@ -66,7 +74,7 @@ public class Solicitation extends Utility{
 		}
 	}
 	
-	public void Borrow(User user, Resource resource) throws SQLException{
+	public void borrow(User user, Resource resource) throws SQLException{
 		System.out.println("Emprestando para " +  user.getName() + " do tipo " + UserType(user));
 		this.setUser(user);
 		this.setResource(resource);

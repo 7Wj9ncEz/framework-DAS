@@ -11,6 +11,16 @@ public class User1 extends User{
 	
 	@DatabaseField(columnName = "idade", canBeNull = false)
 	public Integer idade;
+
+	public User1() {
+	}
+
+	public User1(String name, int functionalRegistration, String endereco, int idade) {
+		super(functionalRegistration, name);
+		this.setEndereco(endereco);
+		this.setIdade(idade);
+	}
+
 	public String getEndereco() {
 		return endereco;
 	}

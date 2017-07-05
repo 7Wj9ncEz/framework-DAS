@@ -1,13 +1,8 @@
 package das;
 
 import java.sql.SQLException;
-import java.util.Set;
-
-import org.reflections.Reflections;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -30,19 +25,10 @@ public class Main {
 
 		Dao<Resource1, Long> resource1Dao = ResourceDaoMultiton.getDao(Resource1.class);
 
-		User1 user1 = new User1();
-		user1.setName("Renata");
-		user1.setFunctionalRegistration(140065415);
-		user1.setIdade(20);
-		user1.setEndereco("Santa Maria");
-
+		User1 user1 = new User1("Renata", 140065415, "Santa Maria", 20);
 		user1Dao.create(user1);
 
-		User2 user2 = new User2();
-		user2.setName("Pedro");
-		user2.setFunctionalRegistration(110135725);
-		user2.setBlabla("Blabla");
-
+		User2 user2 = new User2("Vitor", 140033149, "Barbosa");
 		dao2.create(user2);
 
 		Resource1 projetor1 = new Resource1();

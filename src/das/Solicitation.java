@@ -12,21 +12,28 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "solicitations")
+import static das.Solicitation.SOLICITATIONS_TABLE;
+
+@DatabaseTable(tableName = SOLICITATIONS_TABLE)
 public class Solicitation extends Utility{
+
+	public static final String SOLICITATIONS_TABLE = "solicitations";
+	public static final String SOLICITATION_ID = "solicitation_id";
+	public static final String USER = "user";
+	public static final String RESOURCE = "resource";
 	
-	@DatabaseField(generatedId = true, columnName = "solicitation_id")
+	@DatabaseField(generatedId = true, columnName = SOLICITATION_ID)
 	private int solicitationId;
 	
-	@DatabaseField(foreign = true, columnName = "user", foreignAutoCreate = true)
+	@DatabaseField(foreign = true, columnName = USER, foreignAutoCreate = true)
 	public User user;
 	
-	@DatabaseField(foreign = true, columnName = "resource", foreignAutoCreate = true)
+	@DatabaseField(foreign = true, columnName = RESOURCE, foreignAutoCreate = true)
 	public Resource resource;
 	
 	public boolean isBorrowed(Resource wanted) throws SQLException{
 		System.out.println(this.getDaoSolicitation());
-		List<Solicitation> resources = this.getDaoSolicitation().queryForEq("resource", wanted);
+		List<Solicitation> resources = this.getDaoSolicitation().queryForEq(RESOURCE, wanted);
 		if(resources.isEmpty()){
 			return false;
 		}

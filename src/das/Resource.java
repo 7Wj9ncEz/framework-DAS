@@ -3,13 +3,18 @@ package das;
 import com.j256.ormlite.field.DatabaseField;
 
 public class Resource {
-	@DatabaseField(generatedId = true, columnName = "resource_id")
+
+	public static final String RESOURCE_ID = "resource_id";
+	public static final String RESOURCE_NAME = "resource_name";
+	public static final String RESOURCE_DESCRIPTION = "resource_description";
+
+	@DatabaseField(generatedId = true, columnName = RESOURCE_ID)
 	private Long patrimonyId;
 	
-	@DatabaseField(columnName = "resource_name")
+	@DatabaseField(columnName = RESOURCE_NAME)
 	private String name;
 	
-	@DatabaseField(columnName = "resource_description")
+	@DatabaseField(columnName = RESOURCE_DESCRIPTION)
 	private String description;
 	 
 	public String getName() {

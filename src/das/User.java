@@ -5,21 +5,23 @@ import com.j256.ormlite.table.DatabaseTable;
 
 public class User {
 
+	public static final String USER_ID = "user_id";
+	public static final String USER_NAME = "user_name";
+
+	@DatabaseField(generatedId = true, columnName = USER_ID)
+	private int functionalRegistration;
+
+	@DatabaseField(columnName = USER_NAME, canBeNull = false)
+	private String name;
+
 	public User(int functionalRegistration, String name) {
 		super();
 		this.functionalRegistration = functionalRegistration;
 		this.name = name;
 	}
-	public static final String NAME_FIELD_NAME = "name";
-	
-	@DatabaseField(generatedId = true, columnName = "user_id")
-	private int functionalRegistration;
 
-	@DatabaseField(columnName = NAME_FIELD_NAME, canBeNull = false)
-	private String name;
-
-	public User(String name2) {
-		this.name = name2;
+	public User(String name) {
+		this.name = name;
 	}
 	
 	public User() {

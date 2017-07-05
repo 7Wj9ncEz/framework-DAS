@@ -72,7 +72,7 @@ public class Main {
 		solicitationDao.create(s);
 
 		Solicitation s2 = new Solicitation();
-		s2.MakeSolicitation(user6, Resource1.class);
+		s2.MakeSolicitation(user2, Resource1.class);
 		solicitationDao.create(s2);
 			
 		s.returnResource();

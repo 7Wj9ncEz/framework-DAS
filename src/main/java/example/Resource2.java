@@ -1,9 +1,10 @@
 package example;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import framework.ResourceBase;
 
 @DatabaseTable(tableName = "resources_2")
-public class Resource2 extends ResourceBase{
+public class Resource2 extends ResourceBase {
 	
 	@DatabaseField(columnName = "marca", canBeNull = false)
 	public String marca;

@@ -2,10 +2,15 @@ package framework;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
+import javax.naming.NoPermissionException;
 
 import static framework.Solicitation.SOLICITATIONS_TABLE;
 
@@ -16,6 +21,8 @@ public class Solicitation{
 	public static final String SOLICITATION_ID = "solicitation_id";
 	public static final String USER = "user";
 	public static final String RESOURCE = "resource";
+
+    private static final Logger LOGGER = Logger.getLogger( Solicitation.class.getName() );
 	
 	@DatabaseField(generatedId = true, columnName = SOLICITATION_ID)
 	private int solicitationId;
@@ -38,7 +45,7 @@ public class Solicitation{
 		return true;
 	}
 	
-	public <T> void MakeSolicitation(UserBase user, Class<T> resourceClass) throws SQLException{
+	public <T> void MakeSolicitation(UserBase user, Class<T> resourceClass) throws SQLException, NoPermissionException, NoSuchFieldException {
 		Boolean isAvailable = false, hasPermission = false;
 		List<?> resourcesList = ResourceDaoMultiton.getDao(resourceClass).queryForAll();
 
@@ -60,19 +67,20 @@ public class Solicitation{
 		}
 
 		if(!isAvailable){
-			if(!hasPermission){
-				System.out.println("Oi, " + user.getName()+ "! Infelizmente, você não possui permissão para pegar o recurso do tipo " + resourcesList.get(0).getClass().getSimpleName() + " emprestado");
+            this.getDaoSolicitation().delete(this);
+
+		    if(!hasPermission){
+				throw new NoPermissionException("User " + user.getName() + " do not have permission to get " + resourcesList.get(0).getClass().getSimpleName() + " resource type");
 			}else if(resourcesList.size() != 0){
-				System.out.println("Todos os " + resourcesList.get(0).getClass().getSimpleName() + " estao emprestados, " + user.getName()+ "!" );
-			}else{
-				System.out.println("Não existem recursos deste tipo cadastrados" );
-			}
-			this.getDaoSolicitation().delete(this);
+				throw new NoSuchElementException("All " + resourcesList.get(0).getClass().getSimpleName() + " resources are borrowed");
+			}else {
+                throw new NoSuchFieldException("Does not have resource from this type registered");
+            }
 		}
 	}
 	
 	public void borrow(UserBase user, ResourceBase resource) throws SQLException{
-		System.out.println("Emprestando " + resource.getName() + " para " +  user.getName() + " do tipo " + user.getClass().getSimpleName());
+	    LOGGER.log(Level.INFO, "Borrowed to " +  user.getName() + " of " + user.getClass().getSimpleName()  + " type");
 		this.setUser(user);
 		this.setResource(resource);
 	}
@@ -81,13 +89,13 @@ public class Solicitation{
 		ResourceBase resource =  this.getResource();
 		UserBase user = this.getUser();
 		if(user == null || resource == null){
-			System.out.println("Essa solicitacao não existe");
+		    throw new NullPointerException("This solicitation was empty");
 		}
 		else if(isBorrowed(resource)){
-			System.out.println("Recurso " + resource.getName() + " devolvido, obrigado(a), " + user.getName() + "!");
+            LOGGER.log(Level.INFO, "Resource " + resource.getName() + " returned. Thanks, " + user.getName() + "!");
 			this.getDaoSolicitation().delete(this);
 		}else{
-			System.out.println("Esse item não foi emprestado");
+            throw new NoSuchElementException("This item was not borrow");
 		}
 	}
 

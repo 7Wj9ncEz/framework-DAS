@@ -8,6 +8,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import framework.*;
 
+import javax.naming.NoPermissionException;
+
 public class Main {
 	public static void main(String[] args) throws ClassNotFoundException,
 			SQLException {
@@ -68,26 +70,30 @@ public class Main {
 		Permission p2 = new Permission(User2.class, Resource1.class);
 		permissionDao.create(p2);
 
-		Solicitation s = new Solicitation();
-		s.MakeSolicitation(user1, Resource1.class);
-		solicitationDao.create(s);
+		try {
+			Solicitation s = new Solicitation();
+			s.MakeSolicitation(user1, Resource1.class);
+			solicitationDao.create(s);
 
-		Solicitation s2 = new Solicitation();
-		s2.MakeSolicitation(user2, Resource1.class);
-		solicitationDao.create(s2);
-			
-		s.returnResource();
-		s.returnResource();
-		
-		s2.MakeSolicitation(user6, Resource1.class);
+			Solicitation s2 = new Solicitation();
+			s2.MakeSolicitation(user2, Resource1.class);
+			solicitationDao.create(s2);
 
-		Solicitation s4 = new Solicitation();
-		s4.MakeSolicitation(user3, Resource1.class);
-		solicitationDao.create(s4);
+			s.returnResource();
+			s.returnResource();
 
-		Solicitation s5 = new Solicitation();
-		s5.MakeSolicitation(user2, Resource1.class);
-		solicitationDao.create(s5);
+			s2.MakeSolicitation(user6, Resource1.class);
+
+			Solicitation s4 = new Solicitation();
+			s4.MakeSolicitation(user3, Resource1.class);
+			solicitationDao.create(s4);
+
+			Solicitation s5 = new Solicitation();
+			s5.MakeSolicitation(user2, Resource1.class);
+			solicitationDao.create(s5);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 }

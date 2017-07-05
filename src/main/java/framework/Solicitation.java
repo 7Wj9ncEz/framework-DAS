@@ -25,20 +25,23 @@ public class Solicitation{
     private static final Logger LOGGER = Logger.getLogger( Solicitation.class.getName() );
 	
 	@DatabaseField(generatedId = true, columnName = SOLICITATION_ID)
-	private int solicitationId;
+	private Long solicitationId;
 	
-	@DatabaseField(foreign = true, columnName = USER, foreignAutoCreate = true)
-	public UserBase user;
+	@DatabaseField(columnName = USER)
+	public String userID;
 	
-	@DatabaseField(foreign = true, columnName = RESOURCE, foreignAutoCreate = true)
-	public ResourceBase resource;
+	@DatabaseField(columnName = RESOURCE)
+	public String resourceID;
+	
+	private String resourceName;
+	private String userName;
 	
 	public Solicitation(){
 		
 	}
 	
-	public boolean isBorrowed(ResourceBase wanted) throws SQLException{
-		List<Solicitation> resources = this.getDaoSolicitation().queryForEq(RESOURCE, wanted);
+	public boolean isBorrowed(String wanted) throws SQLException{
+		List<Solicitation> resources = SolicitationDaoSingleton.getDao().queryForEq(RESOURCE, wanted);
 		if(resources.isEmpty()){
 			return false;
 		}
@@ -47,80 +50,81 @@ public class Solicitation{
 	
 	public <T> void MakeSolicitation(UserBase user, Class<T> resourceClass) throws SQLException, NoPermissionException, NoSuchFieldException {
 		Boolean isAvailable = false, hasPermission = false;
+		
 		List<?> resourcesList = ResourceDaoMultiton.getDao(resourceClass).queryForAll();
 
-		List<?> allPermissionsList = PermissionDaoSingleton.getDao().queryForAll();
-
-		int numberOfPermissions = allPermissionsList.size();
-
 		for(Object resource : resourcesList){
-			ResourceBase currentResource = (ResourceBase) resource;
-
-			if(Permission.hasPermission(user, currentResource) || numberOfPermissions == 0){
+			String currentResource = resource.getClass().getSimpleName() + ((ResourceBase) resource).getPatrimonyId();
+			if(Permission.hasPermission(user, (ResourceBase) resource)){
 				hasPermission = true;
 			}
 			if(!isBorrowed(currentResource) && hasPermission){
 				isAvailable = true;
-				borrow(user, currentResource);
+				this.resourceName = ((ResourceBase) resource).getName();
+				this.userName = user.getName();
+				borrow(user.getClass().getSimpleName() + user.getFunctionalRegistration(), currentResource);
 				break;
 			}
 		}
 
 		if(!isAvailable){
             this.getDaoSolicitation().delete(this);
+			SolicitationDaoSingleton.getDao().deleteById(solicitationId);
 
 		    if(!hasPermission){
 				throw new NoPermissionException("User " + user.getName() + " do not have permission to get " + resourcesList.get(0).getClass().getSimpleName() + " resource type");
 			}else if(resourcesList.size() != 0){
-				throw new NoSuchElementException("All " + resourcesList.get(0).getClass().getSimpleName() + " resources are borrowed");
+				throw new NoSuchElementException("All " + resourcesList.get(0).getClass().getSimpleName() + " resources are borrowed, " + user.getName());
 			}else {
-                throw new NoSuchFieldException("Does not have resource from this type registered");
-            }
+				throw new NoSuchFieldException("Does not have resource from this type registered");
+			}
 		}
 	}
 	
-	public void borrow(UserBase user, ResourceBase resource) throws SQLException{
-	    LOGGER.log(Level.INFO, "Borrowed to " +  user.getName() + " of " + user.getClass().getSimpleName()  + " type");
-		this.setUser(user);
-		this.setResource(resource);
+	public void borrow(String user, String resource) throws SQLException{
+		LOGGER.log(Level.INFO, "Borrowed to " +   resourceName + " of " + userName + " type");
+		this.userID = user;
+		this.resourceID = resource;
 	}
 	
 	public void returnResource() throws SQLException{
-		ResourceBase resource =  this.getResource();
-		UserBase user = this.getUser();
+		String resource =  this.getResource();
+		String user = this.getUser();
 		if(user == null || resource == null){
 		    throw new NullPointerException("This solicitation was empty");
 		}
 		else if(isBorrowed(resource)){
-            LOGGER.log(Level.INFO, "Resource " + resource.getName() + " returned. Thanks, " + user.getName() + "!");
-			this.getDaoSolicitation().delete(this);
+			LOGGER.log(Level.INFO, "Resource " + resourceName + " returned. Thanks, " + user + "!");
+			SolicitationDaoSingleton.getDao().deleteById(this.getSolicitationId());
 		}else{
             throw new NoSuchElementException("This item was not borrow");
 		}
 	}
 
-	public int getSolicitationId() {
+	public Long getSolicitationId() {
 		return solicitationId;
 	}
 
-	public void setSolicitationId(int solicitationId) {
+	public void setSolicitationId(Long solicitationId) {
 		this.solicitationId = solicitationId;
 	}
 
-	public UserBase getUser() {
-		return user;
+	public String getUser() {
+		return userID;
 	}
 
 	public void setUser(UserBase user) {
-		this.user = user;
+		this.userID = user.getClass().getSimpleName() + user.getFunctionalRegistration();
+		this.userName = user.getName();
 	}
 
-	public ResourceBase getResource() {
-		return resource;
+	public String getResource() {
+		return resourceID;
 	}
 
 	public void setResource(ResourceBase resource) {
-		this.resource = resource;
+		this.resourceID = resource.getClass().getSimpleName() + resource.getPatrimonyId();
+		this.resourceName = resource.getName();
 	}
 
 	public Dao<Solicitation, Long> getDaoSolicitation() throws SQLException {

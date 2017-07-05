@@ -57,7 +57,6 @@ public class Main {
 		resource1Dao.create(projetor2);
 
 		Resource2 notebook1 = new Resource2((long) 2, "Notebook1", "Prata", "Dell");
-		
 		resource2Dao.create(notebook1);
 		
 		Dao<Solicitation, Long> solicitationDao = SolicitationDaoSingleton.getDao();
@@ -69,6 +68,12 @@ public class Main {
 
 		Permission p2 = new Permission(User2.class, Resource1.class);
 		permissionDao.create(p2);
+		
+		Permission p3 = new Permission(User1.class, Resource2.class);
+		permissionDao.create(p3);
+
+		Permission p4 = new Permission(User2.class, Resource2.class);
+		permissionDao.create(p4);
 
 		try {
 			Solicitation s = new Solicitation();
@@ -91,8 +96,14 @@ public class Main {
 			Solicitation s5 = new Solicitation();
 			s5.MakeSolicitation(user2, Resource1.class);
 			solicitationDao.create(s5);
+
+			Solicitation s6 = new Solicitation();
+			s6.MakeSolicitation(user4, Resource2.class);
+			solicitationDao.create(s6);
+
+			s4.returnResource();
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.print(e.getMessage());
 		}
 
 	}

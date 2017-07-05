@@ -24,11 +24,11 @@ public class Main {
 		TableUtils.createTable(connectionSource, Solicitation.class);
 		TableUtils.createTable(connectionSource, Permission.class);
 
-		Dao<User1, Long> dao = UserDaoMultiton.getDao(User1.class);
+		Dao<User1, Long> user1Dao = UserDaoMultiton.getDao(User1.class);
 
 		Dao<User2, Long> dao2 = UserDaoMultiton.getDao(User2.class);
 
-		Dao<Resource1, Long> daoR = DaoManager.createDao(connectionSource,
+		Dao<Resource1, Long> resource1Dao = DaoManager.createDao(connectionSource,
 				Resource1.class);
 
 		User1 user1 = new User1();
@@ -37,7 +37,7 @@ public class Main {
 		user1.setIdade(20);
 		user1.setEndereco("Santa Maria");
 
-		dao.create(user1);
+		user1Dao.create(user1);
 
 		User2 user2 = new User2();
 		user2.setName("Pedro");
@@ -52,36 +52,35 @@ public class Main {
 		projetor1.setName("Projetor1");
 		projetor1.setDescription("e preto");
 
-		daoR.create(projetor1);
+		resource1Dao.create(projetor1);
 
-		Dao<Solicitation, Long> daoS = SolicitationDaoSingleton.getDao();
+		Dao<Solicitation, Long> solicitationDao = SolicitationDaoSingleton.getDao();
 
-		Dao<Permission, Long> daoP = DaoManager.createDao(connectionSource,
-				Permission.class);
+		Dao<Permission, Long> permissionDao = PermissionDaoSingleton.getDao();
 
 		Permission p = new Permission();
 		p.setUserType("User1");
 		p.setResourceType("Resource1");
 
-		daoP.create(p);
+		permissionDao.create(p);
 
 		Permission p2 = new Permission();
 		p2.setUserType("User2");
 		p2.setResourceType("Resource1");
 
-		daoP.create(p2);
+		permissionDao.create(p2);
 
 		Solicitation s = new Solicitation();
-		s.MakeSolicitation(user1, daoR, daoP);
-		daoS.create(s);
+		s.MakeSolicitation(user1, resource1Dao, permissionDao);
+		solicitationDao.create(s);
 
 		Solicitation s2 = new Solicitation();
 		;
-		s2.MakeSolicitation(user2, daoR, daoP);
-		daoS.create(s2);
+		s2.MakeSolicitation(user2, resource1Dao, permissionDao);
+		solicitationDao.create(s2);
 
 		s.returnResource();
 
-		s2.MakeSolicitation(user2, daoR, daoP);
+		s2.MakeSolicitation(user2, resource1Dao, permissionDao);
 	}
 }

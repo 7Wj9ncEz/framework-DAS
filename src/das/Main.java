@@ -28,8 +28,7 @@ public class Main {
 
 		Dao<User2, Long> dao2 = UserDaoMultiton.getDao(User2.class);
 
-		Dao<Resource1, Long> resource1Dao = DaoManager.createDao(connectionSource,
-				Resource1.class);
+		Dao<Resource1, Long> resource1Dao = ResourceDaoMultiton.getDao(Resource1.class);
 
 		User1 user1 = new User1();
 		user1.setName("Renata");

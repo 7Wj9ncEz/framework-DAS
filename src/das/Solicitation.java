@@ -55,6 +55,7 @@ public class Solicitation{
 			if(!isBorrowed(currentResource) && hasPermission){
 				isAvailable = true;
 				borrow(user, currentResource);
+				break;
 			}
 		}
 
@@ -62,7 +63,7 @@ public class Solicitation{
 			if(!hasPermission){
 				System.out.println("Oi, " + user.getName()+ "! Infelizmente, você não possui permissão para pegar o recurso do tipo " + resourcesList.get(0).getClass().getSimpleName() + " emprestado");
 			}else if(resourcesList.size() != 0){
-				System.out.println("Todos os " + resourcesList.get(0).getClass().getSimpleName() + " estao emprestados" );
+				System.out.println("Todos os " + resourcesList.get(0).getClass().getSimpleName() + " estao emprestados, " + user.getName()+ "!" );
 			}else{
 				System.out.println("Não existem recursos deste tipo cadastrados" );
 			}
@@ -71,7 +72,7 @@ public class Solicitation{
 	}
 	
 	public void borrow(UserBase user, ResourceBase resource) throws SQLException{
-		System.out.println("Emprestando para " +  user.getName() + " do tipo " + user.getClass().getSimpleName());
+		System.out.println("Emprestando " + resource.getName() + " para " +  user.getName() + " do tipo " + user.getClass().getSimpleName());
 		this.setUser(user);
 		this.setResource(resource);
 	}
@@ -80,7 +81,7 @@ public class Solicitation{
 		ResourceBase resource =  this.getResource();
 		UserBase user = this.getUser();
 		if(user == null || resource == null){
-			System.out.println("Essa solicitacao esta vazia");
+			System.out.println("Essa solicitacao não existe");
 		}
 		else if(isBorrowed(resource)){
 			System.out.println("Recurso " + resource.getName() + " devolvido, obrigado(a), " + user.getName() + "!");

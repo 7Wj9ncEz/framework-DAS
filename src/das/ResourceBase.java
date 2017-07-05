@@ -3,6 +3,16 @@ package das;
 import com.j256.ormlite.field.DatabaseField;
 
 public class ResourceBase {
+	
+	public ResourceBase(){
+	}
+
+	public ResourceBase(Long patrimonyId, String name, String description) {
+		super();
+		this.patrimonyId = patrimonyId;
+		this.name = name;
+		this.description = description;
+	}
 
 	public static final String RESOURCE_ID = "resource_id";
 	public static final String RESOURCE_NAME = "resource_name";

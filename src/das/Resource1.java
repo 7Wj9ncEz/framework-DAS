@@ -4,6 +4,15 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "resources_1")
 public class Resource1 extends ResourceBase{
+
+	public Resource1(){
+	}
+
+	public Resource1(Long patrimonyId, String name, String description, String resolucao) {
+		super(patrimonyId, name, description);
+		this.resolucao = resolucao;
+	}
+
 	@DatabaseField(columnName = "resolucao", canBeNull = false)
 	public String resolucao;
 

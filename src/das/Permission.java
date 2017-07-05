@@ -20,14 +20,11 @@ public class Permission extends Utility{
 	@DatabaseField(columnName = "resourceType", canBeNull = false)
 	public String resourceType;
 	
-	public Dao<Permission, Long> permissions;
-	
-	public boolean havePermission(User user, Resource resource, Dao<Permission, Long> daoP) throws SQLException{
-		this.setPermissions(daoP);
+	public boolean havePermission(User user, Resource resource) throws SQLException{
 		Map<String, Object> p = new HashMap<String, Object>();
 		p.put("userType", UserType(user));
 		p.put("resourceType", ResourceType(resource));
-		List<Permission> resources = this.getPermissions().queryForFieldValues(p);
+		List<Permission> resources = PermissionDaoSingleton.getDao().queryForFieldValues(p);
 		if(resources.isEmpty()){
 			return false;
 		}
@@ -53,15 +50,4 @@ public class Permission extends Utility{
 	public void setResourceType(String resourceType) {
 		this.resourceType = resourceType;
 	}
-
-
-	public Dao<Permission, Long> getPermissions() {
-		return permissions;
-	}
-
-
-	public void setPermissions(Dao<Permission, Long> permissions) {
-		this.permissions = permissions;
-	}
-
 }

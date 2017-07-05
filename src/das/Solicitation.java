@@ -33,13 +33,13 @@ public class Solicitation extends Utility{
 		return true;
 	}
 	
-	public void MakeSolicitation(User user, Dao<?,Long> dao, Dao<Permission, Long> daoP) throws SQLException{
+	public <T> void MakeSolicitation(User user, Class<T> resourceClass) throws SQLException{
 		Boolean disponible = false, permission=false;
-		List<?> resources = dao.queryForAll();
+		List<?> resources = ResourceDaoMultiton.getDao(resourceClass).queryForAll();
 		for(Object resource : resources){
 			Permission p = new Permission();
 			Resource resourc = (Resource) resource;
-			if(p.havePermission(user, resourc, daoP)){
+			if(p.havePermission(user, resourc)){
 				permission = true;
 			}
 			if(!isBorrowed(resourc) && permission){

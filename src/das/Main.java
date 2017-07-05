@@ -70,16 +70,15 @@ public class Main {
 		permissionDao.create(p2);
 
 		Solicitation s = new Solicitation();
-		s.MakeSolicitation(user1, resource1Dao, permissionDao);
+		s.MakeSolicitation(user1, Resource1.class);
 		solicitationDao.create(s);
 
 		Solicitation s2 = new Solicitation();
-		;
-		s2.MakeSolicitation(user2, resource1Dao, permissionDao);
+		s2.MakeSolicitation(user2, Resource1.class);
 		solicitationDao.create(s2);
 
 		s.returnResource();
 
-		s2.MakeSolicitation(user2, resource1Dao, permissionDao);
+		s2.MakeSolicitation(user2, Resource1.class);
 	}
 }

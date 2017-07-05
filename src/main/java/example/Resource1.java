@@ -1,6 +1,7 @@
-package das;
+package example;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import framework.ResourceBase;
 
 @DatabaseTable(tableName = "resources_1")
 public class Resource1 extends ResourceBase{

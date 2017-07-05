@@ -1,7 +1,8 @@
-package das;
+package example;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import framework.UserBase;
 
 @DatabaseTable(tableName = "users_1")
 public class User1 extends UserBase {

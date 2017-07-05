@@ -1,4 +1,4 @@
-package das;
+package framework;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -7,7 +7,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import static das.Solicitation.SOLICITATIONS_TABLE;
+import static framework.Solicitation.SOLICITATIONS_TABLE;
 
 @DatabaseTable(tableName = SOLICITATIONS_TABLE)
 public class Solicitation{

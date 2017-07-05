@@ -1,4 +1,4 @@
-package das;
+package framework;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -8,7 +8,7 @@ import java.util.Map;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import static das.Permission.PERMISSIONS_TABLE;
+import static framework.Permission.PERMISSIONS_TABLE;
 
 @DatabaseTable(tableName = PERMISSIONS_TABLE)
 public class Permission{

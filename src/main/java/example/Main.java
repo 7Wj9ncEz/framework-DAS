@@ -1,4 +1,4 @@
-package das;
+package example;
 
 import java.sql.SQLException;
 
@@ -6,6 +6,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.logger.LocalLog;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import framework.*;
 
 public class Main {
 	public static void main(String[] args) throws ClassNotFoundException,

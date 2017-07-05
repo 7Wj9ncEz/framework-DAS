@@ -11,7 +11,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import static das.Permission.PERMISSIONS_TABLE;
 
 @DatabaseTable(tableName = PERMISSIONS_TABLE)
-public class Permission extends Utility{
+public class Permission{
 
 	public static final String PERMISSIONS_TABLE = "permissions";
 	public static final String PERMISSION_ID = "permission_id";
@@ -27,10 +27,19 @@ public class Permission extends Utility{
 	@DatabaseField(columnName = RESOURCE_TYPE, canBeNull = false)
 	public String resourceType;
 	
-	public boolean hasPermission(UserBase user, ResourceBase resource) throws SQLException{
+	public Permission(){
+		
+	}
+	
+	public Permission(Class<? extends UserBase> userClass, Class<? extends ResourceBase> resourceClass){
+		this.setResourceType(resourceClass);
+		this.setUserType(userClass);
+	}
+	
+	public static boolean hasPermission(UserBase user, ResourceBase resource) throws SQLException{
 		Map<String, Object> p = new HashMap<String, Object>();
-		p.put(USER_TYPE, UserType(user));
-		p.put(RESOURCE_TYPE, ResourceType(resource));
+		p.put(USER_TYPE, user.getClass().getName());
+		p.put(RESOURCE_TYPE, resource.getClass().getName());
 
 		List<Permission> resources = PermissionDaoSingleton.getDao().queryForFieldValues(p);
 		if(resources.isEmpty()){
@@ -43,15 +52,15 @@ public class Permission extends Utility{
 		return userType;
 	}
 
-	public void setUserType(String userType) {
-		this.userType = userType;
+	public void setUserType(Class<? extends UserBase> userClass) {
+		this.userType = userClass.getName();
 	}
 
 	public String getResourceType() {
 		return resourceType;
 	}
 
-	public void setResourceType(String resourceType) {
-		this.resourceType = resourceType;
+	public void setResourceType(Class<? extends ResourceBase> resourceClass) {
+		this.resourceType = resourceClass.getName();
 	}
 }

@@ -3,12 +3,15 @@ package das;
 import java.sql.SQLException;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.logger.LocalLog;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 public class Main {
 	public static void main(String[] args) throws ClassNotFoundException,
 			SQLException {
+		
+		System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
 
 		ConnectionSource connectionSource = ConnectionSourceSingleton
 				.getConnectionSource();
@@ -43,16 +46,10 @@ public class Main {
 
 		Dao<Permission, Long> permissionDao = PermissionDaoSingleton.getDao();
 
-		Permission p = new Permission();
-		p.setUserType("User1");
-		p.setResourceType("Resource1");
-
+		Permission p = new Permission(User1.class, Resource1.class);
 		permissionDao.create(p);
 
-		Permission p2 = new Permission();
-		p2.setUserType("User2");
-		p2.setResourceType("Resource1");
-
+		Permission p2 = new Permission(User2.class, Resource1.class);
 		permissionDao.create(p2);
 
 		Solicitation s = new Solicitation();

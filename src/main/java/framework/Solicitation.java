@@ -14,6 +14,9 @@ import javax.naming.NoPermissionException;
 
 import static framework.Solicitation.SOLICITATIONS_TABLE;
 
+/**
+ * Class that do the allocation of a resource to a user
+ */
 @DatabaseTable(tableName = SOLICITATIONS_TABLE)
 public class Solicitation{
 
@@ -22,7 +25,7 @@ public class Solicitation{
 	public static final String USER = "user";
 	public static final String RESOURCE = "resource";
 
-    private static final Logger LOGGER = Logger.getLogger( Solicitation.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(Solicitation.class.getName());
 	
 	@DatabaseField(generatedId = true, columnName = SOLICITATION_ID)
 	private Long solicitationId;
@@ -35,11 +38,19 @@ public class Solicitation{
 	
 	private String resourceName;
 	private String userName;
-	
+
+	/**
+	 * Blank solicitation constructor
+	 */
 	public Solicitation(){
-		
 	}
-	
+
+	/**
+	 * Method that verify if a resource type was borrowed
+	 * @param wanted - String
+	 * @return boolean
+	 * @throws SQLException
+	 */
 	public boolean isBorrowed(String wanted) throws SQLException{
 		List<Solicitation> resources = SolicitationDaoSingleton.getDao().queryForEq(RESOURCE, wanted);
 		if(resources.isEmpty()){
@@ -47,7 +58,16 @@ public class Solicitation{
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Method that do allocation of a resource type to a user
+	 * @param user - UserBase
+	 * @param resourceClass - Class<T>
+	 * @param <T> - Generic type of class that was extend from resource
+	 * @throws SQLException
+	 * @throws NoPermissionException
+	 * @throws NoSuchFieldException
+	 */
 	public <T> void MakeSolicitation(UserBase user, Class<T> resourceClass) throws SQLException, NoPermissionException, NoSuchFieldException {
 		Boolean isAvailable = false, hasPermission = false;
 		
@@ -80,13 +100,23 @@ public class Solicitation{
 			}
 		}
 	}
-	
+
+	/**
+	 * Method that do the association for user and resource types
+	 * @param user - String
+	 * @param resource - String
+	 * @throws SQLException
+	 */
 	public void borrow(String user, String resource) throws SQLException{
 		LOGGER.log(Level.INFO, "Borrowed to " +   resourceName + " of " + userName + " type");
 		this.userID = user;
 		this.resourceID = resource;
 	}
-	
+
+	/**
+	 * Method that do the return of a resource
+	 * @throws SQLException
+	 */
 	public void returnResource() throws SQLException{
 		String resource =  this.getResource();
 		String user = this.getUser();
@@ -97,36 +127,64 @@ public class Solicitation{
 			LOGGER.log(Level.INFO, "Resource " + resourceName + " returned. Thanks, " + user + "!");
 			SolicitationDaoSingleton.getDao().deleteById(this.getSolicitationId());
 		}else{
-            throw new NoSuchElementException("This item was not borrow");
+            throw new NoSuchElementException("This item was not borrowed");
 		}
 	}
 
+	/**
+	 * Method that return the solicitation id
+	 * @return Long
+	 */
 	public Long getSolicitationId() {
 		return solicitationId;
 	}
 
+	/**
+	 * Method that get the solicitation id
+	 * @param solicitationId - Long
+	 */
 	public void setSolicitationId(Long solicitationId) {
 		this.solicitationId = solicitationId;
 	}
 
+	/**
+	 * Method that return the user type
+	 * @return String
+	 */
 	public String getUser() {
 		return userID;
 	}
 
+	/**
+	 * Method that set the user type
+	 * @param user UserBase
+	 */
 	public void setUser(UserBase user) {
 		this.userID = user.getClass().getSimpleName() + user.getFunctionalRegistration();
 		this.userName = user.getName();
 	}
 
+	/**
+	 * Method that return the resource type
+	 * @return String
+	 */
 	public String getResource() {
 		return resourceID;
 	}
 
+	/**
+	 * Method that return the resource type
+	 * @param resource - ResourceBase
+	 */
 	public void setResource(ResourceBase resource) {
 		this.resourceID = resource.getClass().getSimpleName() + resource.getPatrimonyId();
 		this.resourceName = resource.getName();
 	}
 
+	/**
+	 * Method that return the singleton for user dao
+	 * @return Dao<Solicitation, Long>
+	 */
 	public Dao<Solicitation, Long> getDaoSolicitation() throws SQLException {
 		return SolicitationDaoSingleton.getDao();
 	}

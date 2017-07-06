@@ -1,6 +1,8 @@
 package example;
 
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.logger.LocalLog;
@@ -11,6 +13,9 @@ import framework.*;
 import javax.naming.NoPermissionException;
 
 public class Main {
+
+	private static final Logger LOGGER = Logger.getLogger( Main.class.getName() );
+
 	public static void main(String[] args) throws ClassNotFoundException,
 			SQLException {
 		
@@ -103,7 +108,7 @@ public class Main {
 
 			s4.returnResource();
 		} catch (Exception e) {
-			System.out.print(e.getMessage());
+			LOGGER.log(Level.INFO, e.getMessage());
 		}
 
 	}
